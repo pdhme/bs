@@ -1,0 +1,11 @@
+Model Information:
+* title:	Rusty old shotgun
+* source:	https://sketchfab.com/3d-models/rusty-old-shotgun-8ae90069a12546cd99c39ad0d4d890f8
+* author:	Michal Cavrnoch (https://sketchfab.com/MichalCavrnoch)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Rusty old shotgun" (https://sketchfab.com/3d-models/rusty-old-shotgun-8ae90069a12546cd99c39ad0d4d890f8) by Michal Cavrnoch (https://sketchfab.com/MichalCavrnoch) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
