@@ -28,12 +28,12 @@ function getBase64ImageGeometry(item) {
 function down() {
 	document.body.style.backgroundPosition = "center center";
 	document.body.style.backgroundImage =
-		'url("look-down.png")';
+		'url("/irl-buckshot/look-down.png")';
 }
 function up() {
 	document.body.style.backgroundPosition = "center bottom";
 	document.body.style.backgroundImage =
-		'url("/look-up.png")';
+		'url("/irl-buckshot/look-up.png")';
 }
 
 var txt = document.getElementById("main");
@@ -74,7 +74,7 @@ function load_model() {
 	return new Promise ( (resolve, reject) => {
 		window.loader = new GLTFLoader();
 		loader.load(
-			"/assets/shotgun/scene.gltf",
+			"/irl-buckshot/assets/shotgun/scene.gltf",
 			function (gltf) {
 				scene.add(gltf.scene);
 				window.shotgun = gltf.scene;
