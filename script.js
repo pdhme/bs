@@ -9,18 +9,15 @@ import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/l
 // import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 function resize() {
-	document.body.style.backgroundSize =
-		window.innerWidth / window.innerHeight > image_geometry
-			? "100vw auto"
-			: "auto 100vh";
+	document.body.style.backgroundSize = window.innerWidth / window.innerHeight > image_geometry ? "100vw auto" : "auto 100vh";
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-async function getBase64ImageGeometry(item) {
+function getBase64ImageGeometry(item) {
 	var img = new Image();
-	return await new Promise((done) => {
+	return new Promise((done) => {
 		img.onload = function () {
 			done(img.width / img.height);
 		};
@@ -73,10 +70,31 @@ function count(arr, e) {
 //	shotgun = [];
 //}
 
+function load_model() {
+	return new Promise ( (resolve, reject) => {
+		window.loader = new GLTFLoader();
+		loader.load(
+			"/assets/shotgun/scene.gltf",
+			function (gltf) {
+				scene.add(gltf.scene);
+				window.shotgun = gltf.scene;
+				resolve();
+			},
+			function (xhr) {
+				console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+			},
+			function (error) {
+				console.error(error);
+				reject();
+			}
+		);
+	});
+}
 
 async function load() {
+
 	down();
-	window.image_geometry = getBase64ImageGeometry(document.body);
+	window.image_geometry = await getBase64ImageGeometry(document.body);
 
 	window.shotgun_live = new Audio(
 		"https://www.fesliyanstudios.com/play-mp3/7123"
@@ -95,21 +113,10 @@ async function load() {
 	window.camera = new THREE.PerspectiveCamera(75,	window.innerWidth / window.innerHeight,	0.1, 1000);
 
 	// Loader
-	window.loader = new GLTFLoader();
-	await window.loader.load(
-		"/assets/shotgun/scene.gltf",
-		function (gltf) {
-			const model = gltf.scene;
-			scene.add(model);
-			window.shotgun = model;
-		},
-		function (xhr) {
-			console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-		},
-		function (error) {
-			console.error(error);
-		}
-	);
+	var a = await load_model();
+	shotgun.position.x -= 3;
+	shotgun.position.z += 0.5;
+	shotgun.rotation.set(0, -1.9, -1.570796);
 
 	// Renderer
 	window.renderer = new THREE.WebGLRenderer({
@@ -119,34 +126,33 @@ async function load() {
 	});
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setPixelRatio(window.devicePixelRatio);
-	camera.position.set( 10, 0, 0 );
+	var c = 1.5;
+	camera.position.set( 6/c, 8/c, 0 );
 
 	// Light
-	var light = new THREE.PointLight(0xffffff, 30);
-	light.position.set(-5, 10, 10);
+	var light = new THREE.AmbientLight(0xffffff, 15);
 	scene.add(light);
 
 	// Help
 	window.ctrl = new OrbitControls(camera, renderer.domElement);
-	scene.add(new THREE.PointLightHelper(light), new THREE.GridHelper(200, 50));
+	scene.add(new THREE.GridHelper(200, 50));
 
 	window.addEventListener("resize", resize);
 	resize();
+	render();
+
 }
 
 function render() {
 
 	requestAnimationFrame(render);
-	shotgun.rotation.y += 0.01;
 	ctrl.update();
 	renderer.render(scene, camera);
 
 }
 
-load().then(() => {
-	document.getElementById("loading").animate({ opacity: 0 }, { fill: "forwards", duration: 1000 });
-	setTimeout( () => {
-		document.getElementById("loading").remove();
-	}, 1500);
-	render();
+load().then(async () => {
+	let loading_scr = document.getElementById("loading");
+	await loading_scr.animate({ opacity: 0 }, { fill: "forwards", duration: 1000 }).finished;
+	loading_scr.remove();
 });
