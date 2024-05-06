@@ -96,7 +96,7 @@ async function load() {
 
 	// Loader
 	window.loader = new GLTFLoader();
-	window.loader.load(
+	await window.loader.load(
 		"/assets/shotgun/scene.gltf",
 		function (gltf) {
 			const model = gltf.scene;
@@ -112,7 +112,7 @@ async function load() {
 	);
 
 	// Renderer
-	window.renderer = THREE.WebGLRenderer({
+	window.renderer = new THREE.WebGLRenderer({
 		canvas: document.getElementById("shotgun"),
 		antialias: true,
 		alpha: true
@@ -122,14 +122,13 @@ async function load() {
 	camera.position.set( 10, 0, 0 );
 
 	// Light
-	var light = new THREE.PointLight(0xffffff);
+	var light = new THREE.PointLight(0xffffff, 30);
 	light.position.set(-5, 10, 10);
 	scene.add(light);
 
 	// Help
 	window.ctrl = new OrbitControls(camera, renderer.domElement);
 	scene.add(new THREE.PointLightHelper(light), new THREE.GridHelper(200, 50));
-
 
 	window.addEventListener("resize", resize);
 	resize();
@@ -146,6 +145,8 @@ function render() {
 
 load().then(() => {
 	document.getElementById("loading").animate({ opacity: 0 }, { fill: "forwards", duration: 1000 });
-	document.getElementById("loading").remove();
+	setTimeout( () => {
+		document.getElementById("loading").remove();
+	}, 1500);
 	render();
 });
